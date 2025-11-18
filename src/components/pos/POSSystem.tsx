@@ -44,7 +44,7 @@ const POSSystem: React.FC = () => {
   });
 
   const subtotal = currentSale.reduce((sum, item) => sum + item.total, 0);
-  const tax = subtotal * 0.17; // 17% GST for Pakistan
+  const tax = subtotal * 0.17; 
   const total = subtotal + tax;
   const cashReceivedNum = parseFloat(cashReceived) || 0;
   const changeDue = cashReceivedNum - total;
@@ -105,7 +105,7 @@ const POSSystem: React.FC = () => {
           <div className="text-sm text-gray-600">
             Currency:{" "}
             <span className="font-semibold text-blue-600">
-              USD (Pakistani Rupee)
+              USD (United States Dollar)
             </span>
           </div>
         </div>

@@ -124,7 +124,7 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
     customerInfo?: { name?: string; phone?: string }
   ): Sale => {
     const subtotal = currentSale.reduce((sum, item) => sum + item.total, 0);
-    const tax = subtotal * 0.17; // 17% GST for Pakistan
+    const tax = subtotal * 0.17; 
     const total = subtotal + tax;
     const changeDue = cashReceived - total;
 
@@ -248,8 +248,8 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
 <body>
     <div class="header">
         <div class="store-name"> PHARMACY</div>
-        <div class="store-info">123 Main Street, Karachi, Pakistan</div>
-        <div class="store-info">Phone: +92-21-1234567</div>
+        <div class="store-info">123 Main Street, New York, NY 10001</div>
+        <div class="store-info">Phone: (123) 456-7890</div>
         <div class="store-info">NTN: 1234567-8</div>
     </div>
     
