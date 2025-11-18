@@ -20,7 +20,7 @@ const Header: React.FC<HeaderProps> = ({ user, setSidebarOpen }) => {
               onClick={() => setSidebarOpen(true)}
               className="lg:hidden p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500"
             >
-              <Menu className="h-6 w-6" />
+              <Menu className="h-6 w-6" aria-hidden="true" />
             </button>
             <div className="hidden lg:block">
               <h1 className="text-xl font-semibold text-gray-900"> Pharmacy</h1>
