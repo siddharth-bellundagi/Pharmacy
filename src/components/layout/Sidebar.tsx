@@ -10,7 +10,7 @@ import {
   X,
   Share as Pharmacy,
 } from "lucide-react";
-import logo from "../../../dist/assets/logo.png";
+import logo from "/assets/logo.png";
 interface SidebarProps {
   currentView: string;
   setCurrentView: (view: string) => void;

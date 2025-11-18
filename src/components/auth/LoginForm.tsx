@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Share as Pharmacy, AlertCircle } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
-import logo from "../../../dist/assets/logo.png";
+import logo from "/assets/logo.png";
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
