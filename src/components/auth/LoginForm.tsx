@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, Share as Pharmacy, AlertCircle } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import logo from "../../../dist/assets/logo.png";
 
 const LoginForm: React.FC = () => {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -32,21 +33,20 @@ const LoginForm: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center py-7 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
-          <div className="flex justify-center items-center mb-6">
-            <div className="bg-blue-600 p-4 rounded-full">
-              <Pharmacy className="h-10 w-10 text-white" />
+          <div className="flex justify-center items-center">
+            <div className="">
+              <img src={logo} className="h-20 w-20" />
             </div>
           </div>
           <h2 className="text-3xl font-bold text-gray-900 mb-2"> Pharmacy</h2>
           <p className="text-gray-600">Management System</p>
-          <p className="text-sm text-gray-500 mt-4">Sign in to your account</p>
         </div>
 
         <form
-          className="mt-8 space-y-6 bg-white p-8 rounded-xl shadow-lg"
+          className="mt-4 space-y-6 bg-white p-8 rounded-xl shadow-lg"
           onSubmit={handleSubmit}
         >
           {error && (

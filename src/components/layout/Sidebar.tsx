@@ -10,7 +10,7 @@ import {
   X,
   Share as Pharmacy,
 } from "lucide-react";
-
+import logo from "../../../dist/assets/logo.png";
 interface SidebarProps {
   currentView: string;
   setCurrentView: (view: string) => void;
@@ -54,8 +54,8 @@ const Sidebar: React.FC<SidebarProps> = ({
       <div className={sidebarClasses}>
         <div className="flex items-center justify-between h-16 px-6 border-b border-gray-200">
           <div className="flex items-center space-x-3">
-            <div className="bg-blue-600 p-2 rounded-lg">
-              <Pharmacy className="h-6 w-6 text-white" />
+            <div className="flex items-center justify-center">
+              <img src={logo} className="h-12 w-14" />
             </div>
             <div>
               <h2 className="text-lg font-semibold text-gray-900"> Pharmacy</h2>

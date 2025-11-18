@@ -1,46 +1,56 @@
-import React, { useState } from 'react';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  TrendingUp, 
-  Package, 
+import React, { useState } from "react";
+import {
+  Plus,
+  Search,
+  Filter,
+  TrendingUp,
+  Package,
   Calendar,
   Eye,
   CheckCircle,
   XCircle,
-  Clock
-} from 'lucide-react';
-import { usePurchase } from '../../contexts/PurchaseContext';
-import AddPurchaseModal from './AddPurchaseModal';
-import SuppliersManagement from './SuppliersManagement';
+  Clock,
+} from "lucide-react";
+import { usePurchase } from "../../contexts/PurchaseContext";
+import AddPurchaseModal from "./AddPurchaseModal";
+import SuppliersManagement from "./SuppliersManagement";
 
 const PurchaseManagement: React.FC = () => {
-  const { purchases, updatePurchaseStatus, getPendingPurchases } = usePurchase();
+  const { purchases, updatePurchaseStatus, getPendingPurchases } =
+    usePurchase();
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSuppliers, setShowSuppliers] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'pending' | 'delivered' | 'cancelled'>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "pending" | "delivered" | "cancelled"
+  >("all");
 
-  const filteredPurchases = purchases.filter(purchase => {
-    const matchesSearch = !searchQuery || 
+  const filteredPurchases = purchases.filter((purchase) => {
+    const matchesSearch =
+      !searchQuery ||
       purchase.supplierName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       purchase.invoiceNumber.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || purchase.status === statusFilter;
+    const matchesStatus =
+      statusFilter === "all" || purchase.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   const pendingPurchases = getPendingPurchases();
-  const totalValue = purchases.reduce((sum, purchase) => sum + purchase.total, 0);
-  const deliveredCount = purchases.filter(p => p.status === 'delivered').length;
+  const totalValue = purchases.reduce(
+    (sum, purchase) => sum + purchase.total,
+    0
+  );
+  const deliveredCount = purchases.filter(
+    (p) => p.status === "delivered"
+  ).length;
 
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case 'pending':
+      case "pending":
         return <Clock className="h-4 w-4 text-yellow-500" />;
-      case 'delivered':
+      case "delivered":
         return <CheckCircle className="h-4 w-4 text-green-500" />;
-      case 'cancelled':
+      case "cancelled":
         return <XCircle className="h-4 w-4 text-red-500" />;
       default:
         return null;
@@ -49,14 +59,14 @@ const PurchaseManagement: React.FC = () => {
 
   const getStatusClass = (status: string) => {
     switch (status) {
-      case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
-      case 'delivered':
-        return 'bg-green-100 text-green-800';
-      case 'cancelled':
-        return 'bg-red-100 text-red-800';
+      case "pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "delivered":
+        return "bg-green-100 text-green-800";
+      case "cancelled":
+        return "bg-red-100 text-red-800";
       default:
-        return 'bg-gray-100 text-gray-800';
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -67,7 +77,9 @@ const PurchaseManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Purchase Management</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          Purchase Management
+        </h1>
         <div className="mt-4 sm:mt-0 flex space-x-3">
           <button
             onClick={() => setShowSuppliers(true)}
@@ -93,8 +105,12 @@ const PurchaseManagement: React.FC = () => {
               <TrendingUp className="h-6 w-6 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Purchases</p>
-              <p className="text-2xl font-semibold text-gray-900">{purchases.length}</p>
+              <p className="text-sm font-medium text-gray-600">
+                Total Purchases
+              </p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {purchases.length}
+              </p>
             </div>
           </div>
         </div>
@@ -105,7 +121,9 @@ const PurchaseManagement: React.FC = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">Pending</p>
-              <p className="text-2xl font-semibold text-gray-900">{pendingPurchases.length}</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {pendingPurchases.length}
+              </p>
             </div>
           </div>
         </div>
@@ -116,7 +134,9 @@ const PurchaseManagement: React.FC = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">Delivered</p>
-              <p className="text-2xl font-semibold text-gray-900">{deliveredCount}</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {deliveredCount}
+              </p>
             </div>
           </div>
         </div>
@@ -127,7 +147,9 @@ const PurchaseManagement: React.FC = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">Total Value</p>
-              <p className="text-2xl font-semibold text-gray-900">PKR ${totalValue.toFixed(2)}</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                USD ${totalValue.toFixed(2)}
+              </p>
             </div>
           </div>
         </div>
@@ -172,21 +194,39 @@ const PurchaseManagement: React.FC = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Invoice</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Supplier</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order Date</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expected Delivery</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Invoice
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Supplier
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Order Date
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Expected Delivery
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Total
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredPurchases.map((purchase) => (
                 <tr key={purchase.id} className="hover:bg-gray-50">
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <div className="text-sm font-medium text-gray-900">{purchase.invoiceNumber}</div>
-                    <div className="text-sm text-gray-500">{purchase.items.length} items</div>
+                    <div className="text-sm font-medium text-gray-900">
+                      {purchase.invoiceNumber}
+                    </div>
+                    <div className="text-sm text-gray-500">
+                      {purchase.items.length} items
+                    </div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                     {purchase.supplierName}
@@ -198,13 +238,18 @@ const PurchaseManagement: React.FC = () => {
                     {new Date(purchase.expectedDelivery).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    PKR ${purchase.total.toFixed(2)}
+                    USD ${purchase.total.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
                       {getStatusIcon(purchase.status)}
-                      <span className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(purchase.status)}`}>
-                        {purchase.status.charAt(0).toUpperCase() + purchase.status.slice(1)}
+                      <span
+                        className={`ml-2 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusClass(
+                          purchase.status
+                        )}`}
+                      >
+                        {purchase.status.charAt(0).toUpperCase() +
+                          purchase.status.slice(1)}
                       </span>
                     </div>
                   </td>
@@ -213,16 +258,20 @@ const PurchaseManagement: React.FC = () => {
                       <button className="text-indigo-600 hover:text-indigo-900">
                         <Eye className="h-4 w-4" />
                       </button>
-                      {purchase.status === 'pending' && (
+                      {purchase.status === "pending" && (
                         <>
                           <button
-                            onClick={() => updatePurchaseStatus(purchase.id, 'delivered')}
+                            onClick={() =>
+                              updatePurchaseStatus(purchase.id, "delivered")
+                            }
                             className="text-green-600 hover:text-green-900"
                           >
                             <CheckCircle className="h-4 w-4" />
                           </button>
                           <button
-                            onClick={() => updatePurchaseStatus(purchase.id, 'cancelled')}
+                            onClick={() =>
+                              updatePurchaseStatus(purchase.id, "cancelled")
+                            }
                             className="text-red-600 hover:text-red-900"
                           >
                             <XCircle className="h-4 w-4" />
@@ -235,13 +284,17 @@ const PurchaseManagement: React.FC = () => {
               ))}
             </tbody>
           </table>
-          
+
           {filteredPurchases.length === 0 && (
             <div className="text-center py-12">
               <Package className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No purchases found</h3>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                No purchases found
+              </h3>
               <p className="mt-1 text-sm text-gray-500">
-                {searchQuery ? 'Try adjusting your search criteria.' : 'Get started by creating a new purchase order.'}
+                {searchQuery
+                  ? "Try adjusting your search criteria."
+                  : "Get started by creating a new purchase order."}
               </p>
             </div>
           )}
@@ -249,7 +302,9 @@ const PurchaseManagement: React.FC = () => {
       </div>
 
       {/* Modals */}
-      {showAddModal && <AddPurchaseModal onClose={() => setShowAddModal(false)} />}
+      {showAddModal && (
+        <AddPurchaseModal onClose={() => setShowAddModal(false)} />
+      )}
     </div>
   );
 };

@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
-import { X, Package, DollarSign, Calendar } from 'lucide-react';
-import { useInventory, Product } from '../../contexts/InventoryContext';
-import { usePurchase } from '../../contexts/PurchaseContext';
+import React, { useState } from "react";
+import { X, Package, DollarSign, Calendar } from "lucide-react";
+import { useInventory, Product } from "../../contexts/InventoryContext";
+import { usePurchase } from "../../contexts/PurchaseContext";
 
 interface EditProductModalProps {
   product: Product;
   onClose: () => void;
 }
 
-const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose }) => {
+const EditProductModal: React.FC<EditProductModalProps> = ({
+  product,
+  onClose,
+}) => {
   const { updateProduct } = useInventory();
   const { suppliers } = usePurchase();
-  
+
   const [formData, setFormData] = useState({
     name: product.name,
     category: product.category,
@@ -27,14 +30,23 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose })
   });
 
   const categories = [
-    'Pain Relief', 'Antibiotics', 'Vitamins', 'Diabetes Care', 
-    'Heart Health', 'Respiratory', 'Skin Care', 'Digestive Health',
-    'Mental Health', 'Allergy Relief', 'First Aid', 'Other'
+    "Pain Relief",
+    "Antibiotics",
+    "Vitamins",
+    "Diabetes Care",
+    "Heart Health",
+    "Respiratory",
+    "Skin Care",
+    "Digestive Health",
+    "Mental Health",
+    "Allergy Relief",
+    "First Aid",
+    "Other",
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     updateProduct(product.id, {
       name: formData.name,
       category: formData.category,
@@ -48,11 +60,15 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose })
       supplier: formData.supplier,
       description: formData.description,
     });
-    
+
     onClose();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -64,7 +80,9 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose })
             <div className="bg-blue-100 p-2 rounded-lg">
               <Package className="h-6 w-6 text-blue-600" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Edit Product</h2>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Edit Product
+            </h2>
           </div>
           <button
             onClick={onClose}
@@ -113,7 +131,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose })
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Selling Price (PKR) *
+                Selling Price (USD) *
               </label>
               <div className="relative">
                 <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -133,7 +151,7 @@ const EditProductModal: React.FC<EditProductModalProps> = ({ product, onClose })
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cost Price (PKR) *
+                Cost Price (USD) *
               </label>
               <div className="relative">
                 <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />

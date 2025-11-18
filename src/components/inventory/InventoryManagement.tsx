@@ -1,37 +1,45 @@
-import React, { useState } from 'react';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  Package, 
+import React, { useState } from "react";
+import {
+  Plus,
+  Search,
+  Filter,
+  Package,
   AlertTriangle,
   Edit2,
   Trash2,
-  Calendar
-} from 'lucide-react';
-import { useInventory } from '../../contexts/InventoryContext';
-import AddProductModal from './AddProductModal';
-import EditProductModal from './EditProductModal';
+  Calendar,
+} from "lucide-react";
+import { useInventory } from "../../contexts/InventoryContext";
+import AddProductModal from "./AddProductModal";
+import EditProductModal from "./EditProductModal";
 
 const InventoryManagement: React.FC = () => {
-  const { products, deleteProduct, searchProducts, getLowStockProducts, getExpiringProducts } = useInventory();
+  const {
+    products,
+    deleteProduct,
+    searchProducts,
+    getLowStockProducts,
+    getExpiringProducts,
+  } = useInventory();
   const [showAddModal, setShowAddModal] = useState(false);
   const [editingProduct, setEditingProduct] = useState<any>(null);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'low-stock' | 'expiring'>('all');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterType, setFilterType] = useState<
+    "all" | "low-stock" | "expiring"
+  >("all");
 
   const getFilteredProducts = () => {
     let filtered = products;
-    
+
     if (searchQuery) {
       filtered = searchProducts(searchQuery);
     }
-    
+
     switch (filterType) {
-      case 'low-stock':
-        return filtered.filter(p => p.stock <= p.minStock);
-      case 'expiring':
-        return filtered.filter(p => {
+      case "low-stock":
+        return filtered.filter((p) => p.stock <= p.minStock);
+      case "expiring":
+        return filtered.filter((p) => {
           const sixMonthsFromNow = new Date();
           sixMonthsFromNow.setMonth(sixMonthsFromNow.getMonth() + 6);
           return new Date(p.expiryDate) <= sixMonthsFromNow;
@@ -46,7 +54,7 @@ const InventoryManagement: React.FC = () => {
   const expiringCount = getExpiringProducts().length;
 
   const handleDeleteProduct = (id: string) => {
-    if (window.confirm('Are you sure you want to delete this product?')) {
+    if (window.confirm("Are you sure you want to delete this product?")) {
       deleteProduct(id);
     }
   };
@@ -54,7 +62,9 @@ const InventoryManagement: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Inventory Management</h1>
+        <h1 className="text-2xl font-bold text-gray-900">
+          Inventory Management
+        </h1>
         <button
           onClick={() => setShowAddModal(true)}
           className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
@@ -72,8 +82,12 @@ const InventoryManagement: React.FC = () => {
               <Package className="h-6 w-6 text-blue-600" />
             </div>
             <div>
-              <p className="text-sm font-medium text-gray-600">Total Products</p>
-              <p className="text-2xl font-semibold text-gray-900">{products.length}</p>
+              <p className="text-sm font-medium text-gray-600">
+                Total Products
+              </p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {products.length}
+              </p>
             </div>
           </div>
         </div>
@@ -84,7 +98,9 @@ const InventoryManagement: React.FC = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">Low Stock</p>
-              <p className="text-2xl font-semibold text-gray-900">{lowStockCount}</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {lowStockCount}
+              </p>
             </div>
           </div>
         </div>
@@ -95,7 +111,9 @@ const InventoryManagement: React.FC = () => {
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">Expiring Soon</p>
-              <p className="text-2xl font-semibold text-gray-900">{expiringCount}</p>
+              <p className="text-2xl font-semibold text-gray-900">
+                {expiringCount}
+              </p>
             </div>
           </div>
         </div>
@@ -139,37 +157,61 @@ const InventoryManagement: React.FC = () => {
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Expiry</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Product
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Category
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Price
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Stock
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Expiry
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Status
+                </th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
               {filteredProducts.map((product) => {
                 const isLowStock = product.stock <= product.minStock;
-                const isExpiring = new Date(product.expiryDate) <= new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000);
-                
+                const isExpiring =
+                  new Date(product.expiryDate) <=
+                  new Date(Date.now() + 6 * 30 * 24 * 60 * 60 * 1000);
+
                 return (
                   <tr key={product.id} className="hover:bg-gray-50">
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div>
-                        <div className="text-sm font-medium text-gray-900">{product.name}</div>
-                        <div className="text-sm text-gray-500">Batch: {product.batchNumber}</div>
+                        <div className="text-sm font-medium text-gray-900">
+                          {product.name}
+                        </div>
+                        <div className="text-sm text-gray-500">
+                          Batch: {product.batchNumber}
+                        </div>
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {product.category}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
-                      PKR ${product.price.toFixed(2)}
+                      USD ${product.price.toFixed(2)}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-gray-900">{product.stock} units</div>
-                      <div className="text-sm text-gray-500">Min: {product.minStock}</div>
+                      <div className="text-sm text-gray-900">
+                        {product.stock} units
+                      </div>
+                      <div className="text-sm text-gray-500">
+                        Min: {product.minStock}
+                      </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                       {new Date(product.expiryDate).toLocaleDateString()}
@@ -214,13 +256,17 @@ const InventoryManagement: React.FC = () => {
               })}
             </tbody>
           </table>
-          
+
           {filteredProducts.length === 0 && (
             <div className="text-center py-12">
               <Package className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No products found</h3>
+              <h3 className="mt-2 text-sm font-medium text-gray-900">
+                No products found
+              </h3>
               <p className="mt-1 text-sm text-gray-500">
-                {searchQuery ? 'Try adjusting your search criteria.' : 'Get started by adding a new product.'}
+                {searchQuery
+                  ? "Try adjusting your search criteria."
+                  : "Get started by adding a new product."}
               </p>
             </div>
           )}
@@ -228,7 +274,9 @@ const InventoryManagement: React.FC = () => {
       </div>
 
       {/* Modals */}
-      {showAddModal && <AddProductModal onClose={() => setShowAddModal(false)} />}
+      {showAddModal && (
+        <AddProductModal onClose={() => setShowAddModal(false)} />
+      )}
       {editingProduct && (
         <EditProductModal
           product={editingProduct}

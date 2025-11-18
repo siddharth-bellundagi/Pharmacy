@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { X, Package, DollarSign, Calendar } from 'lucide-react';
-import { useInventory } from '../../contexts/InventoryContext';
-import { usePurchase } from '../../contexts/PurchaseContext';
+import React, { useState } from "react";
+import { X, Package, DollarSign, Calendar } from "lucide-react";
+import { useInventory } from "../../contexts/InventoryContext";
+import { usePurchase } from "../../contexts/PurchaseContext";
 
 interface AddProductModalProps {
   onClose: () => void;
@@ -10,30 +10,39 @@ interface AddProductModalProps {
 const AddProductModal: React.FC<AddProductModalProps> = ({ onClose }) => {
   const { addProduct } = useInventory();
   const { suppliers } = usePurchase();
-  
+
   const [formData, setFormData] = useState({
-    name: '',
-    category: '',
-    price: '',
-    costPrice: '',
-    stock: '',
-    minStock: '',
-    barcode: '',
-    expiryDate: '',
-    batchNumber: '',
-    supplier: '',
-    description: '',
+    name: "",
+    category: "",
+    price: "",
+    costPrice: "",
+    stock: "",
+    minStock: "",
+    barcode: "",
+    expiryDate: "",
+    batchNumber: "",
+    supplier: "",
+    description: "",
   });
 
   const categories = [
-    'Pain Relief', 'Antibiotics', 'Vitamins', 'Diabetes Care', 
-    'Heart Health', 'Respiratory', 'Skin Care', 'Digestive Health',
-    'Mental Health', 'Allergy Relief', 'First Aid', 'Other'
+    "Pain Relief",
+    "Antibiotics",
+    "Vitamins",
+    "Diabetes Care",
+    "Heart Health",
+    "Respiratory",
+    "Skin Care",
+    "Digestive Health",
+    "Mental Health",
+    "Allergy Relief",
+    "First Aid",
+    "Other",
   ];
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     addProduct({
       name: formData.name,
       category: formData.category,
@@ -47,11 +56,15 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ onClose }) => {
       supplier: formData.supplier,
       description: formData.description,
     });
-    
+
     onClose();
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -63,7 +76,9 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ onClose }) => {
             <div className="bg-blue-100 p-2 rounded-lg">
               <Package className="h-6 w-6 text-blue-600" />
             </div>
-            <h2 className="text-xl font-semibold text-gray-900">Add New Product</h2>
+            <h2 className="text-xl font-semibold text-gray-900">
+              Add New Product
+            </h2>
           </div>
           <button
             onClick={onClose}
@@ -112,7 +127,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ onClose }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Selling Price (PKR) *
+                Selling Price (USD) *
               </label>
               <div className="relative">
                 <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -132,7 +147,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ onClose }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cost Price (PKR) *
+                Cost Price (USD) *
               </label>
               <div className="relative">
                 <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />

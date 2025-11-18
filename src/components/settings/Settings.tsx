@@ -24,7 +24,7 @@ const Settings: React.FC = () => {
     phone: "+1-555-0123",
     email: "info@pharmacy.com",
     taxId: "TAX-123456789",
-    currency: "PKR",
+    currency: "USD",
     taxRate: "17.00",
   });
 

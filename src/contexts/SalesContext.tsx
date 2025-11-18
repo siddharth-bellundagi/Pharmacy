@@ -271,9 +271,9 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
                     <div class="item-name">${item.productName}</div>
                     <div class="item-qty-price">${
                       item.quantity
-                    } x PKR ${item.price.toFixed(2)}</div>
+                    } x USD ${item.price.toFixed(2)}</div>
                 </div>
-                <div class="item-total">PKR ${item.total.toFixed(2)}</div>
+                <div class="item-total">USD ${item.total.toFixed(2)}</div>
             </div>
         `
           )
@@ -283,26 +283,26 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
     <div class="totals">
         <div class="total-line">
             <span>Subtotal:</span>
-            <span>PKR ${sale.subtotal.toFixed(2)}</span>
+            <span>USD ${sale.subtotal.toFixed(2)}</span>
         </div>
         <div class="total-line">
             <span>GST (17%):</span>
-            <span>PKR ${sale.tax.toFixed(2)}</span>
+            <span>USD ${sale.tax.toFixed(2)}</span>
         </div>
         <div class="total-line grand-total">
             <span>TOTAL:</span>
-            <span>PKR ${sale.total.toFixed(2)}</span>
+            <span>USD ${sale.total.toFixed(2)}</span>
         </div>
     </div>
     
     <div class="payment-info">
         <div class="total-line">
             <span>Cash Received:</span>
-            <span>PKR ${sale.cashReceived.toFixed(2)}</span>
+            <span>USD ${sale.cashReceived.toFixed(2)}</span>
         </div>
         <div class="total-line">
             <span>Change Due:</span>
-            <span>PKR ${sale.changeDue.toFixed(2)}</span>
+            <span>USD ${sale.changeDue.toFixed(2)}</span>
         </div>
     </div>
     
