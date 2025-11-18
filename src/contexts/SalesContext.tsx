@@ -1,5 +1,5 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product } from './InventoryContext';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import { Product } from "./InventoryContext";
 
 export interface SaleItem {
   productId: string;
@@ -16,7 +16,7 @@ export interface Sale {
   subtotal: number;
   tax: number;
   total: number;
-  paymentMethod: 'cash';
+  paymentMethod: "cash";
   cashReceived: number;
   changeDue: number;
   customerName?: string;
@@ -33,7 +33,10 @@ interface SalesContextType {
   removeFromSale: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
   clearSale: () => void;
-  completeSale: (cashReceived: number, customerInfo?: { name?: string; phone?: string }) => Sale;
+  completeSale: (
+    cashReceived: number,
+    customerInfo?: { name?: string; phone?: string }
+  ) => Sale;
   getTodaySales: () => Sale[];
   getTotalRevenue: () => number;
   getSalesByDateRange: (startDate: string, endDate: string) => Sale[];
@@ -42,24 +45,29 @@ interface SalesContextType {
 
 const SalesContext = createContext<SalesContextType | undefined>(undefined);
 
-export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [sales, setSales] = useState<Sale[]>([]);
   const [currentSale, setCurrentSale] = useState<SaleItem[]>([]);
 
   useEffect(() => {
-    const storedSales = localStorage.getItem('pharmacy_sales');
+    const storedSales = localStorage.getItem("pharmacy_sales");
     if (storedSales) {
       setSales(JSON.parse(storedSales));
     }
   }, []);
 
   const addToSale = (product: Product, quantity: number) => {
-    const existingItemIndex = currentSale.findIndex(item => item.productId === product.id);
-    
+    const existingItemIndex = currentSale.findIndex(
+      (item) => item.productId === product.id
+    );
+
     if (existingItemIndex >= 0) {
       const updatedSale = [...currentSale];
       updatedSale[existingItemIndex].quantity += quantity;
-      updatedSale[existingItemIndex].total = updatedSale[existingItemIndex].quantity * product.price;
+      updatedSale[existingItemIndex].total =
+        updatedSale[existingItemIndex].quantity * product.price;
       setCurrentSale(updatedSale);
     } else {
       const newItem: SaleItem = {
@@ -75,7 +83,7 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const removeFromSale = (productId: string) => {
-    setCurrentSale(currentSale.filter(item => item.productId !== productId));
+    setCurrentSale(currentSale.filter((item) => item.productId !== productId));
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
@@ -83,13 +91,13 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       removeFromSale(productId);
       return;
     }
-    
-    const updatedSale = currentSale.map(item => {
+
+    const updatedSale = currentSale.map((item) => {
       if (item.productId === productId) {
         return {
           ...item,
           quantity,
-          total: quantity * item.price
+          total: quantity * item.price,
         };
       }
       return item;
@@ -103,9 +111,11 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const generateReceiptNumber = () => {
     const now = new Date();
-    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, '');
-    const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, '');
-    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const dateStr = now.toISOString().slice(0, 10).replace(/-/g, "");
+    const timeStr = now.toTimeString().slice(0, 8).replace(/:/g, "");
+    const random = Math.floor(Math.random() * 1000)
+      .toString()
+      .padStart(3, "0");
     return `SP-${dateStr}-${timeStr}-${random}`;
   };
 
@@ -124,23 +134,23 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       subtotal,
       tax,
       total,
-      paymentMethod: 'cash',
+      paymentMethod: "cash",
       cashReceived,
       changeDue,
       customerName: customerInfo?.name,
       customerPhone: customerInfo?.phone,
       createdAt: new Date().toISOString(),
-      userId: '1',
+      userId: "1",
       receiptNumber: generateReceiptNumber(),
     };
 
     const updatedSales = [...sales, newSale];
     setSales(updatedSales);
-    localStorage.setItem('pharmacy_sales', JSON.stringify(updatedSales));
-    
+    localStorage.setItem("pharmacy_sales", JSON.stringify(updatedSales));
+
     // Generate and download receipt
     generateReceipt(newSale);
-    
+
     setCurrentSale([]);
     return newSale;
   };
@@ -237,7 +247,7 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 </head>
 <body>
     <div class="header">
-        <div class="store-name">SALMA PHARMACY</div>
+        <div class="store-name"> PHARMACY</div>
         <div class="store-info">123 Main Street, Karachi, Pakistan</div>
         <div class="store-info">Phone: +92-21-1234567</div>
         <div class="store-info">NTN: 1234567-8</div>
@@ -245,23 +255,29 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     
     <div class="receipt-info">
         <div>Receipt #: ${sale.receiptNumber}</div>
-        <div>Date: ${new Date(sale.createdAt).toLocaleDateString('en-PK')}</div>
-        <div>Time: ${new Date(sale.createdAt).toLocaleTimeString('en-PK')}</div>
-        <div>Cashier: ${sale.userId === '1' ? 'Admin' : 'Staff'}</div>
-        ${sale.customerName ? `<div>Customer: ${sale.customerName}</div>` : ''}
-        ${sale.customerPhone ? `<div>Phone: ${sale.customerPhone}</div>` : ''}
+        <div>Date: ${new Date(sale.createdAt).toLocaleDateString("en-PK")}</div>
+        <div>Time: ${new Date(sale.createdAt).toLocaleTimeString("en-PK")}</div>
+        <div>Cashier: ${sale.userId === "1" ? "Admin" : "Staff"}</div>
+        ${sale.customerName ? `<div>Customer: ${sale.customerName}</div>` : ""}
+        ${sale.customerPhone ? `<div>Phone: ${sale.customerPhone}</div>` : ""}
     </div>
     
     <div class="items">
-        ${sale.items.map(item => `
+        ${sale.items
+          .map(
+            (item) => `
             <div class="item">
                 <div class="item-details">
                     <div class="item-name">${item.productName}</div>
-                    <div class="item-qty-price">${item.quantity} x PKR ${item.price.toFixed(2)}</div>
+                    <div class="item-qty-price">${
+                      item.quantity
+                    } x PKR ${item.price.toFixed(2)}</div>
                 </div>
                 <div class="item-total">PKR ${item.total.toFixed(2)}</div>
             </div>
-        `).join('')}
+        `
+          )
+          .join("")}
     </div>
     
     <div class="totals">
@@ -295,15 +311,15 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         <div>Please keep this receipt for your records</div>
         <div>Exchange/Return within 7 days with receipt</div>
         <div>---</div>
-        <div>Powered by Salma Pharmacy POS</div>
+        <div>Powered by  Pharmacy POS</div>
     </div>
 </body>
 </html>`;
 
     // Create and download the receipt
-    const blob = new Blob([receiptContent], { type: 'text/html' });
+    const blob = new Blob([receiptContent], { type: "text/html" });
     const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
+    const link = document.createElement("a");
     link.href = url;
     link.download = `Receipt_${sale.receiptNumber}.html`;
     document.body.appendChild(link);
@@ -312,7 +328,7 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     URL.revokeObjectURL(url);
 
     // Also trigger print dialog
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (printWindow) {
       printWindow.document.write(receiptContent);
       printWindow.document.close();
@@ -326,7 +342,9 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const getTodaySales = () => {
     const today = new Date().toDateString();
-    return sales.filter(sale => new Date(sale.createdAt).toDateString() === today);
+    return sales.filter(
+      (sale) => new Date(sale.createdAt).toDateString() === today
+    );
   };
 
   const getTotalRevenue = () => {
@@ -336,8 +354,8 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const getSalesByDateRange = (startDate: string, endDate: string) => {
     const start = new Date(startDate);
     const end = new Date(endDate);
-    
-    return sales.filter(sale => {
+
+    return sales.filter((sale) => {
       const saleDate = new Date(sale.createdAt);
       return saleDate >= start && saleDate <= end;
     });
@@ -367,7 +385,7 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 export const useSales = () => {
   const context = useContext(SalesContext);
   if (context === undefined) {
-    throw new Error('useSales must be used within a SalesProvider');
+    throw new Error("useSales must be used within a SalesProvider");
   }
   return context;
 };

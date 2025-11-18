@@ -1,6 +1,6 @@
-import React from 'react';
-import { Menu, Bell, User, Settings, LogOut } from 'lucide-react';
-import { useAuth } from '../../contexts/AuthContext';
+import React from "react";
+import { Menu, Bell, User, LogOut } from "lucide-react";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface HeaderProps {
   user: any;
@@ -23,7 +23,7 @@ const Header: React.FC<HeaderProps> = ({ user, setSidebarOpen }) => {
               <Menu className="h-6 w-6" />
             </button>
             <div className="hidden lg:block">
-              <h1 className="text-xl font-semibold text-gray-900">Salma Pharmacy</h1>
+              <h1 className="text-xl font-semibold text-gray-900"> Pharmacy</h1>
             </div>
           </div>
 
@@ -45,16 +45,14 @@ const Header: React.FC<HeaderProps> = ({ user, setSidebarOpen }) => {
                 </div>
                 <div className="hidden md:block text-left">
                   <p className="text-sm font-medium">{user?.name}</p>
-                  <p className="text-xs text-gray-500 capitalize">{user?.role}</p>
+                  <p className="text-xs text-gray-500 capitalize">
+                    {user?.role}
+                  </p>
                 </div>
               </button>
 
               {showUserMenu && (
                 <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-200">
-                  <a href="#" className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                    <Settings className="h-4 w-4 mr-2" />
-                    Settings
-                  </a>
                   <button
                     onClick={logout}
                     className="w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"

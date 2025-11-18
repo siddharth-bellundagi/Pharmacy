@@ -1,5 +1,15 @@
-import React from 'react';
-import { LayoutDashboard, Package, ShoppingCart, TrendingUp, Users, FileText, Settings, X, Share as Pharmacy } from 'lucide-react';
+import React from "react";
+import {
+  LayoutDashboard,
+  Package,
+  ShoppingCart,
+  TrendingUp,
+  Users,
+  FileText,
+  Settings,
+  X,
+  Share as Pharmacy,
+} from "lucide-react";
 
 interface SidebarProps {
   currentView: string;
@@ -8,21 +18,26 @@ interface SidebarProps {
   setIsOpen: (open: boolean) => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, isOpen, setIsOpen }) => {
+const Sidebar: React.FC<SidebarProps> = ({
+  currentView,
+  setCurrentView,
+  isOpen,
+  setIsOpen,
+}) => {
   const menuItems = [
-    { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-    { id: 'inventory', label: 'Inventory', icon: Package },
-    { id: 'pos', label: 'Point of Sale', icon: ShoppingCart },
-    { id: 'purchases', label: 'Purchases', icon: TrendingUp },
-    { id: 'users', label: 'User Management', icon: Users },
-    { id: 'reports', label: 'Reports', icon: FileText },
-    { id: 'settings', label: 'Settings', icon: Settings },
+    { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
+    { id: "inventory", label: "Inventory", icon: Package },
+    { id: "pos", label: "Point of Sale", icon: ShoppingCart },
+    { id: "purchases", label: "Purchases", icon: TrendingUp },
+    { id: "users", label: "User Management", icon: Users },
+    { id: "reports", label: "Reports", icon: FileText },
+    { id: "settings", label: "Settings", icon: Settings },
   ];
 
   const sidebarClasses = `
     fixed inset-y-0 left-0 z-50 w-64 bg-white shadow-lg transform transition-transform duration-200 ease-in-out
     lg:translate-x-0 lg:static lg:inset-0
-    ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+    ${isOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
   `;
 
   return (
@@ -43,7 +58,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, isOpen, 
               <Pharmacy className="h-6 w-6 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-gray-900">Salma Pharmacy</h2>
+              <h2 className="text-lg font-semibold text-gray-900"> Pharmacy</h2>
               <p className="text-xs text-gray-500">Management System</p>
             </div>
           </div>
@@ -60,7 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, isOpen, 
             {menuItems.map((item) => {
               const Icon = item.icon;
               const isActive = currentView === item.id;
-              
+
               return (
                 <li key={item.id}>
                   <button
@@ -70,13 +85,18 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, isOpen, 
                     }}
                     className={`
                       w-full flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-colors
-                      ${isActive
-                        ? 'bg-blue-100 text-blue-700 border-r-2 border-blue-700'
-                        : 'text-gray-700 hover:text-gray-900 hover:bg-gray-100'
+                      ${
+                        isActive
+                          ? "bg-blue-100 text-blue-700 border-r-2 border-blue-700"
+                          : "text-gray-700 hover:text-gray-900 hover:bg-gray-100"
                       }
                     `}
                   >
-                    <Icon className={`mr-3 h-5 w-5 ${isActive ? 'text-blue-600' : 'text-gray-400'}`} />
+                    <Icon
+                      className={`mr-3 h-5 w-5 ${
+                        isActive ? "text-blue-600" : "text-gray-400"
+                      }`}
+                    />
                     {item.label}
                   </button>
                 </li>
@@ -87,7 +107,15 @@ const Sidebar: React.FC<SidebarProps> = ({ currentView, setCurrentView, isOpen, 
 
         <div className="absolute bottom-0 left-0 right-0 p-4 bg-gray-50 border-t border-gray-200">
           <div className="text-center text-xs text-gray-500">
-            <p>&copy; 2024 Salma Pharmacy</p>
+            <p>
+              &copy; 2025 Pharmacy Developed By{" "}
+              <a
+                href="https://www.linkedin.com/in/webdeveloper-wajeehshaikh/"
+                target="_blank"
+              >
+                WS
+              </a>{" "}
+            </p>
             <p>Version 1.0.0</p>
           </div>
         </div>
