@@ -7,7 +7,7 @@ import {
   Minus,
   Receipt,
   Calculator,
-  DollarSign,
+  IndianRupee,
 } from "lucide-react";
 import { useInventory } from "../../contexts/InventoryContext";
 import { useSales } from "../../contexts/SalesContext";
@@ -84,7 +84,7 @@ const POSSystem: React.FC = () => {
       alert(
         `Sale completed successfully!\nReceipt: ${
           sale.receiptNumber
-        }\nChange Due: USD ${changeDue.toFixed(2)}`
+        }\nChange Due: ₹${changeDue.toFixed(2)}`
       );
     } catch (error) {
       alert("Error processing sale. Please try again.");
@@ -105,7 +105,7 @@ const POSSystem: React.FC = () => {
           <div className="text-sm text-gray-600">
             Currency:{" "}
             <span className="font-semibold text-blue-600">
-              USD (United States Dollar)
+              ₹ (Indian Rupee)
             </span>
           </div>
         </div>
@@ -173,7 +173,7 @@ const POSSystem: React.FC = () => {
                         </p>
                       </div>
                       <span className="text-sm font-semibold text-green-600">
-                        USD {product.price.toFixed(2)}
+                        ₹{product.price.toFixed(2)}
                       </span>
                     </div>
                     <div className="flex justify-between items-center">
@@ -232,7 +232,7 @@ const POSSystem: React.FC = () => {
                             {item.productName}
                           </p>
                           <p className="text-xs text-gray-500">
-                            USD {item.price.toFixed(2)} each
+                            ₹{item.price.toFixed(2)} each
                           </p>
                           <p className="text-xs text-gray-400">Max: {maxQty}</p>
                         </div>
@@ -282,7 +282,7 @@ const POSSystem: React.FC = () => {
                         </div>
                         <div className="ml-4">
                           <p className="text-sm font-semibold text-gray-900">
-                            USD {item.total.toFixed(2)}
+                            ₹{item.total.toFixed(2)}
                           </p>
                         </div>
                       </div>
@@ -294,16 +294,16 @@ const POSSystem: React.FC = () => {
                   <div className="space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span>Subtotal:</span>
-                      <span>USD {subtotal.toFixed(2)}</span>
+                      <span>₹{subtotal.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>GST (17%):</span>
-                      <span>USD {tax.toFixed(2)}</span>
+                      <span>₹{tax.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between font-semibold text-lg border-t pt-2">
                       <span>TOTAL:</span>
                       <span className="text-blue-600">
-                        USD {total.toFixed(2)}
+                        ₹{total.toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -359,10 +359,10 @@ const POSSystem: React.FC = () => {
 
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Cash Received (USD)
+                        Cash Received (₹)
                       </label>
                       <div className="relative">
-                        <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                        <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                         <input
                           type="number"
                           step="0.01"
@@ -382,7 +382,7 @@ const POSSystem: React.FC = () => {
                           onClick={() => setCashReceived(amount.toString())}
                           className="px-3 py-2 border border-gray-300 rounded text-sm hover:bg-gray-50"
                         >
-                          USD {amount}
+                          ₹{amount}
                         </button>
                       ))}
                     </div>
@@ -391,11 +391,11 @@ const POSSystem: React.FC = () => {
                       <div className="bg-blue-50 p-3 rounded-lg">
                         <div className="flex justify-between text-sm">
                           <span>Total:</span>
-                          <span>USD {total.toFixed(2)}</span>
+                          <span>₹{total.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-sm">
                           <span>Cash Received:</span>
-                          <span>USD {cashReceivedNum.toFixed(2)}</span>
+                          <span>₹{cashReceivedNum.toFixed(2)}</span>
                         </div>
                         <div className="flex justify-between text-sm font-semibold border-t pt-2 mt-2">
                           <span>Change Due:</span>
@@ -404,7 +404,7 @@ const POSSystem: React.FC = () => {
                               changeDue >= 0 ? "text-green-600" : "text-red-600"
                             }
                           >
-                            USD {changeDue.toFixed(2)}
+                            ₹{changeDue.toFixed(2)}
                           </span>
                         </div>
                       </div>

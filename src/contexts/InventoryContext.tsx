@@ -1,27 +1,31 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
+
 export interface Product {
   id: string;
   name: string;
   category: string;
   price: number;
   costPrice: number;
-  stock: number;
+  quantity: number;
   minStock: number;
   barcode: string;
   expiryDate: string;
   batchNumber: string;
   supplier: string;
   description: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 interface InventoryContextType {
   products: Product[];
-  addProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => void;
-  updateProduct: (id: string, updates: Partial<Product>) => void;
-  deleteProduct: (id: string) => void;
+  loading: boolean;
+  error: string | null;
+  addProduct: (product: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => Promise<void>;
+  updateProduct: (id: string, updates: Partial<Product>) => Promise<void>;
+  deleteProduct: (id: string) => Promise<void>;
   getProduct: (id: string) => Product | undefined;
   getLowStockProducts: () => Product[];
   getExpiringProducts: () => Product[];
@@ -32,120 +36,137 @@ const InventoryContext = createContext<InventoryContextType | undefined>(undefin
 
 export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  // Fetch products from backend
+  const fetchProducts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await fetch(`${API_BASE_URL}/products`);
+      if (!response.ok) throw new Error('Failed to fetch products');
+      const data = await response.json();
+      // Normalize backend product shape to frontend expectations
+      const normalized = data.map((p: any) => ({
+        id: p.id || p._id,
+        name: p.name,
+        category: p.category,
+        price: p.price,
+        costPrice: p.costPrice,
+        quantity: p.quantity ?? p.stock ?? 0,
+        stock: p.quantity ?? p.stock ?? 0, // alias used by POS
+        minStock: p.minStock,
+        barcode: p.barcode,
+        expiryDate: p.expiryDate,
+        batchNumber: p.batchNumber,
+        supplier: typeof p.supplier === 'object' && p.supplier?._id ? p.supplier._id : p.supplier,
+        description: p.description,
+        createdAt: p.createdAt,
+        updatedAt: p.updatedAt,
+      }));
+      setProducts(normalized);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Error fetching products');
+      console.error('Fetch products error:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    // Initialize with sample data
-    const sampleProducts: Product[] = [
-      {
-        id: '1',
-        name: 'Paracetamol 500mg',
-        category: 'Pain Relief',
-        price: 5.99,
-        costPrice: 3.50,
-        stock: 150,
-        minStock: 20,
-        barcode: '1234567890123',
-        expiryDate: '2025-12-31',
-        batchNumber: 'PAR001',
-        supplier: 'PharmaCorp Ltd',
-        description: 'Effective pain relief and fever reducer',
-        createdAt: '2024-01-15',
-        updatedAt: '2024-01-15'
-      },
-      {
-        id: '2',
-        name: 'Amoxicillin 250mg',
-        category: 'Antibiotics',
-        price: 12.50,
-        costPrice: 8.75,
-        stock: 8,
-        minStock: 15,
-        barcode: '2345678901234',
-        expiryDate: '2024-06-30',
-        batchNumber: 'AMO002',
-        supplier: 'MediSupply Co',
-        description: 'Broad-spectrum antibiotic',
-        createdAt: '2024-01-10',
-        updatedAt: '2024-01-10'
-      },
-      {
-        id: '3',
-        name: 'Vitamin C 1000mg',
-        category: 'Vitamins',
-        price: 8.75,
-        costPrice: 5.25,
-        stock: 75,
-        minStock: 25,
-        barcode: '3456789012345',
-        expiryDate: '2026-03-15',
-        batchNumber: 'VTC003',
-        supplier: 'HealthPlus Inc',
-        description: 'High-strength Vitamin C supplement',
-        createdAt: '2024-01-12',
-        updatedAt: '2024-01-12'
-      },
-      {
-        id: '4',
-        name: 'Insulin Pen',
-        category: 'Diabetes Care',
-        price: 35.00,
-        costPrice: 22.50,
-        stock: 12,
-        minStock: 10,
-        barcode: '4567890123456',
-        expiryDate: '2024-08-20',
-        batchNumber: 'INS004',
-        supplier: 'DiabetesCare Ltd',
-        description: 'Fast-acting insulin pen',
-        createdAt: '2024-01-08',
-        updatedAt: '2024-01-08'
-      }
-    ];
-    
-    const storedProducts = localStorage.getItem('pharmacy_products');
-    if (storedProducts) {
-      setProducts(JSON.parse(storedProducts));
-    } else {
-      setProducts(sampleProducts);
-      localStorage.setItem('pharmacy_products', JSON.stringify(sampleProducts));
-    }
+    fetchProducts();
   }, []);
 
-  const addProduct = (productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
-    const newProduct: Product = {
-      ...productData,
-      id: Date.now().toString(),
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-    
-    const updatedProducts = [...products, newProduct];
-    setProducts(updatedProducts);
-    localStorage.setItem('pharmacy_products', JSON.stringify(updatedProducts));
+  // Add product via API
+  const addProduct = async (productData: Omit<Product, 'id' | 'createdAt' | 'updatedAt'>) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/products`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(productData),
+      });
+      if (!response.ok) throw new Error('Failed to add product');
+      const newProduct = await response.json();
+      const normalizedNew = {
+        id: newProduct.id || newProduct._id,
+        name: newProduct.name,
+        category: newProduct.category,
+        price: newProduct.price,
+        costPrice: newProduct.costPrice,
+        quantity: newProduct.quantity ?? newProduct.stock ?? 0,
+        stock: newProduct.quantity ?? newProduct.stock ?? 0,
+        minStock: newProduct.minStock,
+        barcode: newProduct.barcode,
+        expiryDate: newProduct.expiryDate,
+        batchNumber: newProduct.batchNumber,
+        supplier: typeof newProduct.supplier === 'object' && newProduct.supplier?._id ? newProduct.supplier._id : newProduct.supplier,
+        description: newProduct.description,
+        createdAt: newProduct.createdAt,
+        updatedAt: newProduct.updatedAt,
+      };
+      setProducts([...products, normalizedNew]);
+    } catch (err) {
+      console.error('Add product error:', err);
+      throw err;
+    }
   };
 
-  const updateProduct = (id: string, updates: Partial<Product>) => {
-    const updatedProducts = products.map(product =>
-      product.id === id
-        ? { ...product, ...updates, updatedAt: new Date().toISOString() }
-        : product
-    );
-    setProducts(updatedProducts);
-    localStorage.setItem('pharmacy_products', JSON.stringify(updatedProducts));
+  // Update product via API
+  const updateProduct = async (id: string, updates: Partial<Product>) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      });
+      if (!response.ok) throw new Error('Failed to update product');
+      const updatedProduct = await response.json();
+      const normalizedUpdated = {
+        id: updatedProduct.id || updatedProduct._id,
+        name: updatedProduct.name,
+        category: updatedProduct.category,
+        price: updatedProduct.price,
+        costPrice: updatedProduct.costPrice,
+        quantity: updatedProduct.quantity ?? updatedProduct.stock ?? 0,
+        stock: updatedProduct.quantity ?? updatedProduct.stock ?? 0,
+        minStock: updatedProduct.minStock,
+        barcode: updatedProduct.barcode,
+        expiryDate: updatedProduct.expiryDate,
+        batchNumber: updatedProduct.batchNumber,
+        supplier: typeof updatedProduct.supplier === 'object' && updatedProduct.supplier?._id ? updatedProduct.supplier._id : updatedProduct.supplier,
+        description: updatedProduct.description,
+        createdAt: updatedProduct.createdAt,
+        updatedAt: updatedProduct.updatedAt,
+      };
+      setProducts(products.map(p => p.id === id ? normalizedUpdated : p));
+    } catch (err) {
+      console.error('Update product error:', err);
+      throw err;
+    }
   };
 
-  const deleteProduct = (id: string) => {
-    const updatedProducts = products.filter(product => product.id !== id);
-    setProducts(updatedProducts);
-    localStorage.setItem('pharmacy_products', JSON.stringify(updatedProducts));
+  // Delete product via API
+  const deleteProduct = async (id: string) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/products/${id}`, {
+        method: 'DELETE',
+      });
+      if (!response.ok) throw new Error('Failed to delete product');
+      setProducts(products.filter(p => p.id !== id));
+    } catch (err) {
+      console.error('Delete product error:', err);
+      throw err;
+    }
   };
 
+  // Local helper functions
   const getProduct = (id: string) => {
     return products.find(product => product.id === id);
   };
 
   const getLowStockProducts = () => {
-    return products.filter(product => product.stock <= product.minStock);
+    return products.filter(product => product.quantity <= product.minStock);
   };
 
   const getExpiringProducts = () => {
@@ -168,10 +189,14 @@ export const InventoryProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     );
   };
 
+
+
   return (
     <InventoryContext.Provider
       value={{
         products,
+        loading,
+        error,
         addProduct,
         updateProduct,
         deleteProduct,

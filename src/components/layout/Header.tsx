@@ -1,6 +1,7 @@
 import React from "react";
 import { Menu, Bell, User, LogOut } from "lucide-react";
 import { useAuth } from "../../contexts/AuthContext";
+import { useSettings } from "../../contexts/SettingsContext";
 
 interface HeaderProps {
   user: any;
@@ -9,6 +10,7 @@ interface HeaderProps {
 
 const Header: React.FC<HeaderProps> = ({ user, setSidebarOpen }) => {
   const { logout } = useAuth();
+  const { settings } = useSettings();
   const [showUserMenu, setShowUserMenu] = React.useState(false);
 
   return (
@@ -23,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({ user, setSidebarOpen }) => {
               <Menu className="h-6 w-6" aria-hidden="true" />
             </button>
             <div className="hidden lg:block">
-              <h1 className="text-xl font-semibold text-gray-900"> Pharmacy</h1>
+              <h1 className="text-xl font-semibold text-gray-900">{settings?.storeName || "Pharmacy"}</h1>
             </div>
           </div>
 

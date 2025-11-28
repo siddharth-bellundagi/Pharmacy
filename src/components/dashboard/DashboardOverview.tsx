@@ -11,12 +11,14 @@ import { useSales } from "../../contexts/SalesContext";
 import { useInventory } from "../../contexts/InventoryContext";
 import { usePurchase } from "../../contexts/PurchaseContext";
 import { useUserManagement } from "../../contexts/UserContext";
+import { useSettings } from "../../contexts/SettingsContext";
 
 const DashboardOverview: React.FC = () => {
   const { getTodaySales, getTotalRevenue } = useSales();
   const { products, getLowStockProducts, getExpiringProducts } = useInventory();
   const { getPendingPurchases } = usePurchase();
   const { getActiveUsers } = useUserManagement();
+  const { settings } = useSettings();
 
   const todaySales = getTodaySales();
   const totalRevenue = getTotalRevenue();
@@ -67,7 +69,10 @@ const DashboardOverview: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+          <p className="text-lg text-blue-600 font-semibold mt-1">{settings?.storeName}</p>
+        </div>
         <div className="mt-4 sm:mt-0">
           <div className="flex items-center text-sm text-gray-500">
             <Calendar className="h-4 w-4 mr-2" />

@@ -4,6 +4,7 @@ import { InventoryProvider } from './contexts/InventoryContext';
 import { SalesProvider } from './contexts/SalesContext';
 import { PurchaseProvider } from './contexts/PurchaseContext';
 import { UserProvider } from './contexts/UserContext';
+import { SettingsProvider } from './contexts/SettingsContext';
 import LoginForm from './components/auth/LoginForm';
 import Dashboard from './components/dashboard/Dashboard';
 import Sidebar from './components/layout/Sidebar';
@@ -45,15 +46,17 @@ const AppContent: React.FC = () => {
 function App() {
   return (
     <AuthProvider>
-      <UserProvider>
-        <InventoryProvider>
-          <SalesProvider>
-            <PurchaseProvider>
-              <AppContent />
-            </PurchaseProvider>
-          </SalesProvider>
-        </InventoryProvider>
-      </UserProvider>
+      <SettingsProvider>
+        <UserProvider>
+          <InventoryProvider>
+            <SalesProvider>
+              <PurchaseProvider>
+                <AppContent />
+              </PurchaseProvider>
+            </SalesProvider>
+          </InventoryProvider>
+        </UserProvider>
+      </SettingsProvider>
     </AuthProvider>
   );
 }

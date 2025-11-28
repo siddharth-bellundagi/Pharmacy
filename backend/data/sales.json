@@ -1,0 +1,76 @@
+[
+  {
+    "id": "1",
+    "items": [
+      {
+        "productId": "1",
+        "productName": "Paracetamol 500mg",
+        "quantity": 2,
+        "price": 50,
+        "total": 100
+      },
+      {
+        "productId": "3",
+        "productName": "Vitamin C 1000mg",
+        "quantity": 1,
+        "price": 80,
+        "total": 80
+      }
+    ],
+    "subtotal": 180,
+    "tax": 31,
+    "total": 211,
+    "paymentMethod": "cash",
+    "cashReceived": 250,
+    "changeDue": 39,
+    "customerName": "John Doe",
+    "customerPhone": "9876543210",
+    "createdAt": "2025-11-28T06:38:22.430Z",
+    "userId": "1",
+    "receiptNumber": "SP-001"
+  },
+  {
+    "id": "1764313010639",
+    "items": [
+      {
+        "productId": "1764312850254",
+        "productName": "Dolo 650mg",
+        "quantity": 5,
+        "price": 5,
+        "total": 25,
+        "sku": "1234567890123"
+      }
+    ],
+    "subtotal": 25,
+    "tax": 4.25,
+    "total": 29.25,
+    "paymentMethod": "cash",
+    "cashReceived": 29.99,
+    "changeDue": 0.7399999999999984,
+    "createdAt": "2025-11-28T06:56:50.653Z",
+    "userId": "1",
+    "receiptNumber": "SP-20251128-122650-496"
+  },
+  {
+    "id": "1764313278955",
+    "items": [
+      {
+        "productId": "1764312850254",
+        "productName": "Dolo 650mg",
+        "quantity": 50,
+        "price": 5,
+        "total": 250,
+        "sku": "1234567890123"
+      }
+    ],
+    "subtotal": 250,
+    "tax": 42.5,
+    "total": 292.5,
+    "paymentMethod": "cash",
+    "cashReceived": 300,
+    "changeDue": 7.5,
+    "createdAt": "2025-11-28T07:01:18.966Z",
+    "userId": "1",
+    "receiptNumber": "SP-20251128-123118-139"
+  }
+]

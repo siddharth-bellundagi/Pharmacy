@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Package, DollarSign, Calendar } from "lucide-react";
+import { X, Package, IndianRupee, Calendar } from "lucide-react";
 import { useInventory, Product } from "../../contexts/InventoryContext";
 import { usePurchase } from "../../contexts/PurchaseContext";
 
@@ -131,10 +131,10 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Selling Price (USD) *
+                Selling Price (₹) *
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="number"
                   name="price"
@@ -151,10 +151,10 @@ const EditProductModal: React.FC<EditProductModalProps> = ({
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cost Price (USD) *
+                Cost Price (₹) *
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="number"
                   name="costPrice"

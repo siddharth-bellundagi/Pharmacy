@@ -169,7 +169,7 @@ const ReportsAnalytics: React.FC = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
           <div className="flex items-center">
             <div className="bg-green-100 p-3 rounded-lg mr-4">
-              <DollarSign className="h-6 w-6 text-green-600" />
+              <IndianRupee className="h-6 w-6 text-green-600" />
             </div>
             <div>
               <p className="text-sm font-medium text-gray-600">
@@ -318,7 +318,7 @@ const ReportsAnalytics: React.FC = () => {
                     </div>
                   </div>
                   <span className="text-sm font-semibold text-green-600">
-                    USD ${product.revenue.toFixed(2)}
+                    ₹{product.revenue.toFixed(2)}
                   </span>
                 </div>
               ))
@@ -369,7 +369,7 @@ const ReportsAnalytics: React.FC = () => {
                       </div>
                     </div>
                     <span className="text-sm font-semibold text-gray-900">
-                      USD ${revenue.toFixed(2)}
+                      ₹{revenue.toFixed(2)}
                     </span>
                   </div>
                 ))
@@ -395,7 +395,7 @@ const ReportsAnalytics: React.FC = () => {
                 Total Revenue (All Time)
               </span>
               <span className="font-semibold text-gray-900">
-                USD ${totalRevenue.toFixed(2)}
+                ₹{totalRevenue.toFixed(2)}
               </span>
             </div>
             <div className="flex justify-between items-center p-3 bg-gray-50 rounded-lg">

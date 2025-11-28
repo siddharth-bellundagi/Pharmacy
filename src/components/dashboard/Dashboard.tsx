@@ -4,7 +4,7 @@ import InventoryManagement from '../inventory/InventoryManagement';
 import POSSystem from '../pos/POSSystem';
 import PurchaseManagement from '../purchases/PurchaseManagement';
 import UserManagement from '../users/UserManagement';
-import ReportsAnalytics from '../reports/ReportsAnalytics';
+import Analytics from '../analytics/Analytics';
 import Settings from '../settings/Settings';
 
 interface DashboardProps {
@@ -23,7 +23,7 @@ const Dashboard: React.FC<DashboardProps> = ({ currentView }) => {
       case 'users':
         return <UserManagement />;
       case 'reports':
-        return <ReportsAnalytics />;
+        return <Analytics />;
       case 'settings':
         return <Settings />;
       default:

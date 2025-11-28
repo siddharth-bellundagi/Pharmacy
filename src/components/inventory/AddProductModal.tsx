@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { X, Package, DollarSign, Calendar } from "lucide-react";
+import { X, Package, IndianRupee, Calendar } from "lucide-react";
 import { useInventory } from "../../contexts/InventoryContext";
 import { usePurchase } from "../../contexts/PurchaseContext";
 
@@ -16,7 +16,7 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ onClose }) => {
     category: "",
     price: "",
     costPrice: "",
-    stock: "",
+    quantity: "",
     minStock: "",
     barcode: "",
     expiryDate: "",
@@ -43,19 +43,27 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ onClose }) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
+    // Validation
+    if (!formData.name || !formData.category || !formData.price || !formData.costPrice || !formData.quantity || !formData.supplier) {
+      alert("Please fill in all required fields");
+      return;
+    }
+
     addProduct({
       name: formData.name,
       category: formData.category,
       price: parseFloat(formData.price),
       costPrice: parseFloat(formData.costPrice),
-      stock: parseInt(formData.stock),
-      minStock: parseInt(formData.minStock),
+      quantity: parseInt(formData.quantity),
+      minStock: parseInt(formData.minStock) || 0,
       barcode: formData.barcode,
       expiryDate: formData.expiryDate,
       batchNumber: formData.batchNumber,
       supplier: formData.supplier,
       description: formData.description,
-    });
+      manufacturer: "Default", // Add default manufacturer
+      isActive: true, // Add default status
+    } as any);
 
     onClose();
   };
@@ -127,10 +135,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ onClose }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Selling Price (USD) *
+                Selling Price (₹) *
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="number"
                   name="price"
@@ -147,10 +155,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ onClose }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cost Price (USD) *
+                Cost Price (₹) *
               </label>
               <div className="relative">
-                <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <IndianRupee className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                 <input
                   type="number"
                   name="costPrice"
@@ -171,10 +179,10 @@ const AddProductModal: React.FC<AddProductModalProps> = ({ onClose }) => {
               </label>
               <input
                 type="number"
-                name="stock"
+                name="quantity"
                 required
                 min="0"
-                value={formData.stock}
+                value={formData.quantity}
                 onChange={handleChange}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 placeholder="0"

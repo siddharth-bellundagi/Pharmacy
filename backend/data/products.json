@@ -1,0 +1,73 @@
+[
+  {
+    "id": "1",
+    "name": "Paracetamol 500mg",
+    "category": "Pain Relief",
+    "price": 50,
+    "costPrice": 30,
+    "quantity": 150,
+    "minStock": 20,
+    "barcode": "1234567890123",
+    "expiryDate": "2025-12-31",
+    "batchNumber": "PAR001",
+    "supplier": "PharmaCorp Ltd",
+    "description": "Effective pain relief and fever reducer"
+  },
+  {
+    "id": "2",
+    "name": "Amoxicillin 250mg",
+    "category": "Antibiotics",
+    "price": 120,
+    "costPrice": 80,
+    "quantity": 50,
+    "minStock": 15,
+    "barcode": "2345678901234",
+    "expiryDate": "2025-06-30",
+    "batchNumber": "AMO002",
+    "supplier": "MediSupply Co",
+    "description": "Broad-spectrum antibiotic"
+  },
+  {
+    "id": "3",
+    "name": "Vitamin C 1000mg",
+    "category": "Vitamins",
+    "price": 80,
+    "costPrice": 50,
+    "quantity": 75,
+    "minStock": 25,
+    "barcode": "3456789012345",
+    "expiryDate": "2026-03-15",
+    "batchNumber": "VTC003",
+    "supplier": "HealthPlus Inc",
+    "description": "High-strength Vitamin C supplement"
+  },
+  {
+    "id": "4",
+    "name": "Insulin Pen",
+    "category": "Diabetes Care",
+    "price": 350,
+    "costPrice": 220,
+    "quantity": 12,
+    "minStock": 10,
+    "barcode": "4567890123456",
+    "expiryDate": "2025-08-20",
+    "batchNumber": "INS004",
+    "supplier": "DiabetesCare Ltd",
+    "description": "Fast-acting insulin pen"
+  },
+  {
+    "id": "1764312850254",
+    "name": "Dolo 650mg",
+    "category": "Pain Relief",
+    "price": 5,
+    "costPrice": 3,
+    "stock": 100,
+    "minStock": 20,
+    "barcode": "1234567890123",
+    "expiryDate": "2030-04-20",
+    "batchNumber": "PAR001",
+    "supplier": "PharmaCorp Ltd",
+    "description": "",
+    "createdAt": "2025-11-28T06:54:10.254Z"
+  }
+]

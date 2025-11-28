@@ -148,7 +148,7 @@ const PurchaseManagement: React.FC = () => {
             <div>
               <p className="text-sm font-medium text-gray-600">Total Value</p>
               <p className="text-2xl font-semibold text-gray-900">
-                USD ${totalValue.toFixed(2)}
+                ₹{totalValue.toFixed(2)}
               </p>
             </div>
           </div>
@@ -238,7 +238,7 @@ const PurchaseManagement: React.FC = () => {
                     {new Date(purchase.expectedDelivery).toLocaleDateString()}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                    USD ${purchase.total.toFixed(2)}
+                    ₹{purchase.total.toFixed(2)}
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">

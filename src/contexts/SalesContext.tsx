@@ -1,5 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Product } from "./InventoryContext";
+import { useSettings } from "./SettingsContext";
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api';
 
 export interface SaleItem {
   productId: string;
@@ -16,19 +19,21 @@ export interface Sale {
   subtotal: number;
   tax: number;
   total: number;
+  profit?: number;
   paymentMethod: "cash";
   cashReceived: number;
   changeDue: number;
   customerName?: string;
   customerPhone?: string;
   createdAt: string;
-  userId: string;
+  userId?: string;
   receiptNumber: string;
 }
 
 interface SalesContextType {
   sales: Sale[];
   currentSale: SaleItem[];
+  loading: boolean;
   addToSale: (product: Product, quantity: number) => void;
   removeFromSale: (productId: string) => void;
   updateQuantity: (productId: string, quantity: number) => void;
@@ -36,7 +41,7 @@ interface SalesContextType {
   completeSale: (
     cashReceived: number,
     customerInfo?: { name?: string; phone?: string }
-  ) => Sale;
+  ) => Promise<Sale>;
   getTodaySales: () => Sale[];
   getTotalRevenue: () => number;
   getSalesByDateRange: (startDate: string, endDate: string) => Sale[];
@@ -50,12 +55,43 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const [sales, setSales] = useState<Sale[]>([]);
   const [currentSale, setCurrentSale] = useState<SaleItem[]>([]);
+  const [loading, setLoading] = useState(false);
+  const { settings } = useSettings();
+
+  // Fetch sales from backend
+  const fetchSales = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_BASE_URL}/sales`);
+      if (!response.ok) throw new Error('Failed to fetch sales');
+      const data = await response.json();
+      // Normalize backend sale objects (map _id to id, ensure profit field)
+      const normalized = data.map((s: any) => ({
+        id: s.id || s._id,
+        items: s.items || [],
+        subtotal: s.subtotal || 0,
+        tax: s.tax || 0,
+        total: s.total || 0,
+        profit: s.profit ?? 0,
+        paymentMethod: s.paymentMethod || 'cash',
+        cashReceived: s.cashReceived || 0,
+        changeDue: s.changeDue || 0,
+        customerName: s.customerName,
+        customerPhone: s.customerPhone,
+        createdAt: s.createdAt,
+        userId: s.userId,
+        receiptNumber: s.receiptNumber,
+      }));
+      setSales(normalized);
+    } catch (error) {
+      console.error('Fetch sales error:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const storedSales = localStorage.getItem("pharmacy_sales");
-    if (storedSales) {
-      setSales(JSON.parse(storedSales));
-    }
+    fetchSales();
   }, []);
 
   const addToSale = (product: Product, quantity: number) => {
@@ -119,17 +155,17 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
     return `SP-${dateStr}-${timeStr}-${random}`;
   };
 
-  const completeSale = (
+  const completeSale = async (
     cashReceived: number,
     customerInfo?: { name?: string; phone?: string }
-  ): Sale => {
+  ): Promise<Sale> => {
     const subtotal = currentSale.reduce((sum, item) => sum + item.total, 0);
     const tax = subtotal * 0.17; 
     const total = subtotal + tax;
     const changeDue = cashReceived - total;
 
-    const newSale: Sale = {
-      id: Date.now().toString(),
+    const newSale: any = {
+      // frontend-side sale object; backend will assign its own _id/timestamps
       items: [...currentSale],
       subtotal,
       tax,
@@ -139,20 +175,46 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
       changeDue,
       customerName: customerInfo?.name,
       customerPhone: customerInfo?.phone,
-      createdAt: new Date().toISOString(),
-      userId: "1",
       receiptNumber: generateReceiptNumber(),
+      createdAt: new Date().toISOString(),
     };
 
-    const updatedSales = [...sales, newSale];
-    setSales(updatedSales);
-    localStorage.setItem("pharmacy_sales", JSON.stringify(updatedSales));
-
-    // Generate and download receipt
-    generateReceipt(newSale);
-
-    setCurrentSale([]);
-    return newSale;
+    // Send sale to backend
+    try {
+      const response = await fetch(`${API_BASE_URL}/sales`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSale),
+      });
+      if (!response.ok) throw new Error('Failed to save sale');
+      const savedSale = await response.json();
+      
+      // Normalize backend response
+      const normalizedSale: Sale = {
+        id: savedSale.id || savedSale._id,
+        items: savedSale.items || [],
+        subtotal: savedSale.subtotal || 0,
+        tax: savedSale.tax || 0,
+        total: savedSale.total || 0,
+        profit: savedSale.profit ?? 0,
+        paymentMethod: savedSale.paymentMethod || 'cash',
+        cashReceived: savedSale.cashReceived || 0,
+        changeDue: savedSale.changeDue || 0,
+        customerName: savedSale.customerName,
+        customerPhone: savedSale.customerPhone,
+        createdAt: savedSale.createdAt,
+        userId: savedSale.userId,
+        receiptNumber: savedSale.receiptNumber,
+      };
+      
+      setSales([...sales, normalizedSale]);
+      setCurrentSale([]);
+      generateReceipt(normalizedSale);
+      return normalizedSale;
+    } catch (error) {
+      console.error('Complete sale error:', error);
+      throw error;
+    }
   };
 
   const generateReceipt = (sale: Sale) => {
@@ -247,16 +309,16 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
 </head>
 <body>
     <div class="header">
-        <div class="store-name"> PHARMACY</div>
-        <div class="store-info">123 Main Street, New York, NY 10001</div>
-        <div class="store-info">Phone: (123) 456-7890</div>
-        <div class="store-info">NTN: 1234567-8</div>
+      <div class="store-name">${settings?.storeName || '🏥 MEDICAL STORE'}</div>
+      <div class="store-info">${settings?.address?.street || ''} ${settings?.address?.city || ''} ${settings?.address?.state || ''}</div>
+      <div class="store-info">Phone: ${settings?.contact?.phone || '+91-XXXXXXXXXX'}</div>
+      <div class="store-info">GSTIN: ${settings?.businessDetails?.gstin || '27AABXX0000A1Z5'}</div>
     </div>
     
     <div class="receipt-info">
         <div>Receipt #: ${sale.receiptNumber}</div>
-        <div>Date: ${new Date(sale.createdAt).toLocaleDateString("en-PK")}</div>
-        <div>Time: ${new Date(sale.createdAt).toLocaleTimeString("en-PK")}</div>
+        <div>Date: ${new Date(sale.createdAt).toLocaleDateString("en-IN")}</div>
+        <div>Time: ${new Date(sale.createdAt).toLocaleTimeString("en-IN")}</div>
         <div>Cashier: ${sale.userId === "1" ? "Admin" : "Staff"}</div>
         ${sale.customerName ? `<div>Customer: ${sale.customerName}</div>` : ""}
         ${sale.customerPhone ? `<div>Phone: ${sale.customerPhone}</div>` : ""}
@@ -271,9 +333,9 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
                     <div class="item-name">${item.productName}</div>
                     <div class="item-qty-price">${
                       item.quantity
-                    } x USD ${item.price.toFixed(2)}</div>
+                    } x ₹${item.price.toFixed(2)}</div>
                 </div>
-                <div class="item-total">USD ${item.total.toFixed(2)}</div>
+                <div class="item-total">₹${item.total.toFixed(2)}</div>
             </div>
         `
           )
@@ -283,26 +345,26 @@ export const SalesProvider: React.FC<{ children: React.ReactNode }> = ({
     <div class="totals">
         <div class="total-line">
             <span>Subtotal:</span>
-            <span>USD ${sale.subtotal.toFixed(2)}</span>
+            <span>₹${sale.subtotal.toFixed(2)}</span>
         </div>
         <div class="total-line">
             <span>GST (17%):</span>
-            <span>USD ${sale.tax.toFixed(2)}</span>
+            <span>₹${sale.tax.toFixed(2)}</span>
         </div>
         <div class="total-line grand-total">
             <span>TOTAL:</span>
-            <span>USD ${sale.total.toFixed(2)}</span>
+            <span>₹${sale.total.toFixed(2)}</span>
         </div>
     </div>
     
     <div class="payment-info">
         <div class="total-line">
             <span>Cash Received:</span>
-            <span>USD ${sale.cashReceived.toFixed(2)}</span>
+            <span>₹${sale.cashReceived.toFixed(2)}</span>
         </div>
         <div class="total-line">
             <span>Change Due:</span>
-            <span>USD ${sale.changeDue.toFixed(2)}</span>
+            <span>₹${sale.changeDue.toFixed(2)}</span>
         </div>
     </div>
     

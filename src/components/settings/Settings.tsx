@@ -18,13 +18,13 @@ const Settings: React.FC = () => {
   const [showNewPassword, setShowNewPassword] = useState(false);
 
   const [pharmacySettings, setPharmacySettings] = useState({
-    name: " Pharmacy",
+    name: "🏥 Medical Store",
     license: "PH-2024-001",
-    address: "123 Main Street, City, State 12345",
-    phone: "+1-555-0123",
-    email: "info@pharmacy.com",
-    taxId: "TAX-123456789",
-    currency: "USD",
+    address: "Mumbai, India",
+    phone: "+91-XXXXXXXXXX",
+    email: "info@medicalstore.com",
+    taxId: "GSTIN: 27AABXX0000A1Z5",
+    currency: "INR",
     taxRate: "17.00",
   });
 
@@ -212,6 +212,7 @@ const Settings: React.FC = () => {
             }
             className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           >
+            <option value="INR">₹ INR - Indian Rupee</option>
             <option value="USD">USD - US Dollar</option>
             <option value="EUR">EUR - Euro</option>
             <option value="GBP">GBP - British Pound</option>
